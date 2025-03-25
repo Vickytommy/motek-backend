@@ -7,3 +7,5 @@ class RegisteredUserAdmin(admin.ModelAdmin):
     search_fields = ("firstname", "lastname", "mobile", "mail", "id_card")
     list_filter = ("city", "number_of_tickets")
     ordering = ("firstname", "lastname")
+
+# admin.site.register(RegisteredUser, RegisteredUserAdmin)

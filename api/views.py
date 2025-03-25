@@ -3,6 +3,7 @@ from rest_framework import viewsets
 from .models import RegisteredUser
 from .serializers import RegisteredUserSerializer
 from django.http import JsonResponse
+from .utils import send_sms_via_activetrail
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -68,3 +69,16 @@ def register(request):
             return JsonResponse({"error": str(e)}, status=400)
 
     return JsonResponse({"error": "Invalid request"}, status=400)
+
+
+def notify_user(request):
+    person_name = "John Doe"
+    phone_number = "+2349123254011"  # Example phone number
+    ticket_link = "https://example.com/ticket"
+
+    response = send_sms_via_activetrail(person_name, phone_number, ticket_link)
+
+    print(response)
+    return JsonResponse(response)
+
+

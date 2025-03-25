@@ -1,6 +1,8 @@
 # Ignore the Django migration directory
 **/migrations/
 __pycache__/
+api/__pycache__
+motek/__pycache__
 
 # Ignore database files
 *.db
