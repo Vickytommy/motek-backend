@@ -92,9 +92,17 @@ WSGI_APPLICATION = 'motek.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'motek_db',
+        'USER': 'motek_user',
+        'PASSWORD': 'securepassword',
+        'HOST': '35.223.190.166',
+        'PORT': '5432',
     }
 }
 
