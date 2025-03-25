@@ -1,0 +1,15 @@
+# Ignore the Django migration directory
+**/migrations/
+
+# Ignore database files
+*.db
+*.sqlite3
+
+# Ignore text editor backup files
+*~
+
+# Ignore environment-specific settings
+.env
+
+# Ignore the virtual environment directory
+venv/
