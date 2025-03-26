@@ -16,6 +16,9 @@ class RegisteredUser(models.Model):
     id_card = models.CharField(max_length=50, unique=True)
     city = models.CharField(max_length=50)
     number_of_tickets = models.PositiveIntegerField()
+    date = models.CharField(max_length=50, default='')
+    time = models.CharField(max_length=50, default='')
+
 
     # Tickets (Optional, up to 6)
     ticket1 = models.CharField(max_length=50, blank=True, null=True)
@@ -113,8 +116,8 @@ class RegisteredUser(models.Model):
         # date_text = f"מועד: {self.event_date}"  # Example: "17.04.25"
         # time_text = f"שעה: {self.event_time}"   # Example: "14:00-17:30"
 
-        date_text = f"מועד: 17.04.25"
-        time_text = f"שעה: 14:00-17:30"
+        date_text = self.date
+        time_text = self.time
 
         # Header text
         header_text = f"Header text"

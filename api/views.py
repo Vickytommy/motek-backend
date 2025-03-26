@@ -18,18 +18,22 @@ def users(request):
 
 @api_view(['POST'])
 def register(request):
-    print('[The serializer - ] ',
-           request.POST.get("ticket1"),
-           request.POST.get("ticket2"),
-           request.POST.get("ticket3"),
-           request.POST.get("ticket4"),
-           )
-    # serializer = RegisteredUserSerializer(data=request.data)
-    # if serializer.is_valid():
-    #     serializer.save()
-    #     return Response(serializer.data, status=status.HTTP_201_CREATED)
-    # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # print('[The serializer - ] ',
+    #        request.POST.get("time"),
+    #        request.POST.get("date"),
+    #        )
     
+    date_map = {
+        1: 'יום שני 15.04.25',
+        2: 'יום שלישי 16.04.25',
+        3: 'יום רביעי 17.04.25'
+    }
+
+    time_map = {
+        1: 'מחזור א’: 9:00-12:00',
+        2: 'מחזור ב’: 14:00-17:30'
+    }
+
     if request.method == "POST":
         try:
             firstname = request.POST.get("firstname")
@@ -45,6 +49,10 @@ def register(request):
             ticket4 = request.POST.get("ticket4", "")
             ticket5 = request.POST.get("ticket5", "")
             ticket6 = request.POST.get("ticket6", "")
+            date = date_map[int(request.POST.get("date"))]
+            time = time_map[int(request.POST.get("time"))]
+
+            request.POST.get("date") == 1
 
             RegisteredUser.objects.create(
                 firstname=firstname,
@@ -59,7 +67,9 @@ def register(request):
                 ticket3=ticket3,
                 ticket4=ticket4,
                 ticket5=ticket5,
-                ticket6=ticket6
+                ticket6=ticket6,
+                date=date,
+                time=time
             )
 
             return JsonResponse({"message": "Registration successful!"}, status=201)
