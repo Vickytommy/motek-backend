@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-from .models import RegisteredUser
+from .models import RegisteredUser, UserLimit
 from .serializers import RegisteredUserSerializer
 from django.http import JsonResponse
 from .utils import send_sms_via_activetrail
@@ -35,6 +35,9 @@ def register(request):
     }
 
     if request.method == "POST":
+        if RegisteredUser.objects.count() >= UserLimit.count:
+            return JsonResponse({"error": "User limit reached"}, status=400)
+        
         try:
             firstname = request.POST.get("firstname")
             lastname = request.POST.get("lastname")
@@ -51,8 +54,6 @@ def register(request):
             ticket6 = request.POST.get("ticket6", "")
             date = date_map[int(request.POST.get("date"))]
             time = time_map[int(request.POST.get("time"))]
-
-            request.POST.get("date") == 1
 
             RegisteredUser.objects.create(
                 firstname=firstname,

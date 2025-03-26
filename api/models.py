@@ -8,6 +8,9 @@ from django.conf import settings
 
 logo_path = os.path.join(settings.STATIC_ROOT, "images/Logo_Motek.png")
 
+class UserLimit(models.Model):
+    count = models.IntegerField(default=2000)
+    
 class RegisteredUser(models.Model):
     firstname = models.CharField(max_length=50)
     lastname = models.CharField(max_length=50)
@@ -111,10 +114,6 @@ class RegisteredUser(models.Model):
             font = ImageFont.truetype("arial.ttf", 32) 
         except:
             font = ImageFont.load_default()
-
-        # Draw event details
-        # date_text = f"מועד: {self.event_date}"  # Example: "17.04.25"
-        # time_text = f"שעה: {self.event_time}"   # Example: "14:00-17:30"
 
         date_text = self.date
         time_text = self.time
