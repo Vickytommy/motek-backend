@@ -10,5 +10,5 @@ class RegisteredUserAdmin(admin.ModelAdmin):
 
 @admin.register(UserLimit)
 class UserLimitAdmin(admin.ModelAdmin):
-    list_display = ("count",)
-    
+    list_display = ("ticket_day", "ticket_time", "cycle_count", "current_count", "color_code", "image")
+    ordering = ("-ticket_day", "ticket_time")

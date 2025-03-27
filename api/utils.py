@@ -3,8 +3,9 @@
 import requests
 import json
 from django.conf import settings
+from .models import RegisteredUser
 
-def send_sms_via_activetrail(person_name, phone_number, ticket_link):
+def send_sms_via_activetrail(person_name, phone_number, user_id):
     """
     Send an SMS using ActiveTrail's API.
 
@@ -16,10 +17,24 @@ def send_sms_via_activetrail(person_name, phone_number, ticket_link):
     - dict: Response from ActiveTrail API.
     """
     url = f"{settings.ACTIVETRAIL_API_BASE_URL}/smscampaign/OperationalMessage"
-    
-    message = f'''שלום {person_name}, מצורפים הכרטיסים לאירוע "עושים באזז לסביבה", אנא הצג אותם בכניסה לאירוע.\n'''
-    message += "חשוב: הכרטיס הוא אישי ואינו ניתן להעברה, אורח שאין ברשותו כרטיס לא יורשה להיכנס לאירוע.\n"
-    message += f"כדי לצפות בכרטיסים יש ללחוץ על הלינק הבא: \n{ticket_link}"
+
+    # Retrieve the user from the user_id
+    user = RegisteredUser.objects.get(id=user_id)
+
+    # Construct the message with the main ticket and up to 6 extra tickets from the user if they are non-empty
+    ticket_links = [user.ticket] + [getattr(user, f"extra_ticket{i}") for i in range(1, 7) if getattr(user, f"extra_ticket{i}", None)]
+    ticket_links_text = "\n\n".join([f"https://www.motek.co.il/media/{link}" for link in ticket_links])
+
+    print('[Ticket sms links ] - ', ticket_links, '\n\n', ticket_links_text)
+
+    message = f"""שלום {person_name},  
+        מצורפים הכרטיסים לאירוע "עושים באזז לסביבה", אנא הצג אותם בכניסה לאירוע.
+
+        חשוב: הכרטיס הוא אישי ואינו ניתן להעברה, אורח שאין ברשותו כרטיס לא יורשה להיכנס לאירוע.
+
+        כדי לצפות בכרטיסים יש ללחוץ על הלינקים הבאים: 
+    """
+    message = message + '\n' + ticket_links_text
     
     headers = {
         'Authorization': f"{settings.ACTIVETRAIL_ACCESS_TOKEN}",
@@ -32,17 +47,17 @@ def send_sms_via_activetrail(person_name, phone_number, ticket_link):
             "can_unsubscribe": False,
             "name": "test1",
             "from_name": "test",
-            "content": "שלום {person_name}, מצורפים הכרטיסים לאירוע \"מותק של יער\", אנא הצג אותם בכניסה לאירוע.\nחשוב: הכרטיס הוא אישי ואינו ניתן להעברה, אורח שאין ברשותו כרטיס לא יורשה להיכנס לאירוע.\nכדי לצפות בכרטיסים יש ללחוץ על הלינק הבא: \n{ticket_link}"
+            "content": message,
         },
         "scheduling": {
             "send_now": True,
         },
         "mobiles": [
             {
-            "phone_number": "0505760215"
+            "phone_number": phone_number
             },
             {
-            "phone_number": "0505760215"
+            "phone_number": phone_number
             }
         ]
     }
@@ -58,7 +73,7 @@ def send_sms_via_activetrail(person_name, phone_number, ticket_link):
         return {"error": str(e)}
     
 
-def send_email_via_activetrail(person_name, phone_number, ticket_link):
+def send_email_via_activetrail(person_name, mail, user_id):
     """
     Send an EMAIL using ActiveTrail's API.
 
@@ -70,11 +85,25 @@ def send_email_via_activetrail(person_name, phone_number, ticket_link):
     - dict: Response from ActiveTrail API.
     """
 
-    url = f"{settings.ACTIVETRAIL_API_BASE_URL}/campaigns/Contacts"
+    url = f"{settings.ACTIVETRAIL_API_BASE_URL}/OperationalMessage/Message"
+
+    # Retrieve the user from the user_id
+    user = RegisteredUser.objects.get(id=user_id)
+
+    # Construct the message with the main ticket and up to 6 extra tickets from the user if they are non-empty
+    ticket_links = [user.ticket] + [getattr(user, f"extra_ticket{i}") for i in range(1, 7) if getattr(user, f"extra_ticket{i}", None)]
+    ticket_links_text = "<br /> <br />".join([f"https://www.motek.co.il/media/{link}" for link in ticket_links])
+
+    print('[Ticket links ] - ', ticket_links, '\n\n', ticket_links_text)
+    message = f"""שלום {person_name},  
+        מצורפים הכרטיסים לאירוע "עושים באזז לסביבה", אנא הצג אותם בכניסה לאירוע.
+
+        חשוב: הכרטיס הוא אישי ואינו ניתן להעברה, אורח שאין ברשותו כרטיס לא יורשה להיכנס לאירוע.
+
+        כדי לצפות בכרטיסים יש ללחוץ על הלינקים הבאים: 
+    """
+    message = message + "<br />" + ticket_links_text
     
-    message = f'''שלום {person_name}, מצורפים הכרטיסים לאירוע "עושים באזז לסביבה", אנא הצג אותם בכניסה לאירוע.\n'''
-    message += "חשוב: הכרטיס הוא אישי ואינו ניתן להעברה, אורח שאין ברשותו כרטיס לא יורשה להיכנס לאירוע.\n"
-    message += f"כדי לצפות בכרטיסים יש ללחוץ על הלינק הבא: \n{ticket_link}"
     
     headers = {
         'Authorization': f"{settings.ACTIVETRAIL_ACCESS_TOKEN}",
@@ -82,62 +111,23 @@ def send_email_via_activetrail(person_name, phone_number, ticket_link):
     }
     
     payload = {
+        "email_package": [
+            {
+            "email": mail,
+            },
+        ],
         "details": {
-            "unsubscribe_text": "unsubscribe",
-            "can_unsubscribe": False,
-            "name": "test1",
-            "from_name": "test",
-            "content": "שלום {person_name}, מצורפים הכרטיסים לאירוע \"מותק של יער\", אנא הצג אותם בכניסה לאירוע.\nחשוב: הכרטיס הוא אישי ואינו ניתן להעברה, אורח שאין ברשותו כרטיס לא יורשה להיכנס לאירוע.\nכדי לצפות בכרטיסים יש ללחוץ על הלינק הבא: \n{ticket_link}"
+            "name": "name",
+            "subject": "subject",
+            "user_profile_id": 39897,
+            "classification": "sample string 3",
         },
-        "scheduling": {
-            "send_now": True,
-        },
-        "mobiles": [
-            {
-            "phone_number": "0505760215"
-            },
-            {
-            "phone_number": "0505760215"
-            }
-        ]
-    }
-
-    payload = {
-        "campaign": {
-            "send_test": "sample string 1",
-
-            "details": {
-                "name": "sample string 1",
-                "subject": "sample string 2",
-                "user_profile_id": 1,
-                "google_analytics_name": "sample string 3",
-                "sub_account_id": 1,
-                "content_category_id": 1,
-                "preheader": "sample string 4",
-                "predictive_delivery": True,
-                "segmentation_id": 1
-            },
-
-            "design": {
-                "content": "sample string 1",
-                "language_type": "UTF-8",
-                "header_footer_language_type": "UTF-8",
-                "is_add_print_email": True,
-                "is_auto_css_inliner": True,
-                "is_remove_system_links": False
-            },
-
-            "template": {
-                "id": 1
-            },
-
-        },
-
-        "campaign_contacts": {
-            "contacts_ids": [ 1, 2 ],
-            "contacts_emails": [
-                "vickytommy785@gmail.com",
-            ]
+        "design": {
+            "content": message,
+            "language_type": "UTF-8",
+            "body_part_format": 1,
+            "add_print_button": True,
+            "add_Statistics": True
         }
     }
     

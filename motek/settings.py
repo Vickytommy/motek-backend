@@ -30,8 +30,10 @@ DEBUG = True
 ALLOWED_HOSTS = ["*"] 
 
 CORS_ALLOWED_ORIGINS = [
-    "https://frontend.com",
     "http://localhost:8000",
+    "http://35.223.190.166",
+    "https://motek-kkl.co.il",
+    "https://www.motek-kkl.co.il",
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True 
