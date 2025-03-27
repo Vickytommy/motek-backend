@@ -18,10 +18,7 @@ def users(request):
 
 @api_view(['POST'])
 def register(request):
-    # print('[The serializer - ] ',
-    #        request.POST.get("time"),
-    #        request.POST.get("date"),
-    #        )
+    # print('[The serializer - ] ', UserLimit.objects.first().count)
     
     date_map = {
         1: 'יום שני 15.04.25',
@@ -35,8 +32,19 @@ def register(request):
     }
 
     if request.method == "POST":
-        if RegisteredUser.objects.count() >= UserLimit.count:
-            return JsonResponse({"error": "User limit reached"}, status=400)
+        user_limit = UserLimit.objects.first().count | 2000
+
+        if RegisteredUser.objects.filter(id_card=request.POST.get("id_card")).exists():
+            # ID card already registered
+            return JsonResponse({"message": "לא ניתן להירשם עם פרטים אלו. מספר הטלפון ו/או האימייל כבר קיימים במערכת"}, status=400)
+        
+        if RegisteredUser.objects.filter(mail=request.POST.get("mail")).exists():
+            # Email already registered
+            return JsonResponse({"message": "לא ניתן להירשם עם פרטים אלו. מספר הטלפון ו/או האימייל כבר קיימים במערכת"}, status=400)
+        
+        if RegisteredUser.objects.count() >= user_limit:
+            # User limit reached
+            return JsonResponse({"message": "ההרשמה סגורה"}, status=400)
         
         try:
             firstname = request.POST.get("firstname")
@@ -73,13 +81,15 @@ def register(request):
                 time=time
             )
 
-            return JsonResponse({"message": "Registration successful!"}, status=201)
+            # Registration successful
+            return JsonResponse({"message": "הרישום בוצע בהצלחה"}, status=201)
 
         except Exception as e:
             print('[Error - ] ', e)
-            return JsonResponse({"error": str(e)}, status=400)
+            return JsonResponse({"message": str(e)}, status=400)
 
-    return JsonResponse({"error": "Invalid request"}, status=400)
+    # Invalid request
+    return JsonResponse({"message": "הרישום נכשל"}, status=400)
 
 
 def notify_user(request):

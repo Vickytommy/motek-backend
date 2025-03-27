@@ -162,3 +162,4 @@ ACTIVETRAIL_ACCESS_TOKEN = '0XB0069EBBCDC1496C17D399B061A30362459AA2FD8696968E6B
 
 
 # $apiUrl = 'https://webapi.mymarketing.co.il/api/smscampaign/OperationalMessage';
+

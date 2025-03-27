@@ -10,5 +10,5 @@ class RegisteredUserAdmin(admin.ModelAdmin):
 
 @admin.register(UserLimit)
 class UserLimitAdmin(admin.ModelAdmin):
-    list_display = ("count")
+    list_display = ("count",)
     
