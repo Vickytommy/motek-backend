@@ -46,7 +46,7 @@ def send_sms_via_activetrail(person_name, phone_number, user_id):
             "unsubscribe_text": "unsubscribe",
             "can_unsubscribe": False,
             "name": "test1",
-            "from_name": "test",
+            "from_name": "רישום לאירוע מותק של יער",
             "content": message,
         },
         "scheduling": {
@@ -54,10 +54,10 @@ def send_sms_via_activetrail(person_name, phone_number, user_id):
         },
         "mobiles": [
             {
-            "phone_number": phone_number
+                "phone_number": phone_number
             },
             {
-            "phone_number": phone_number
+                "phone_number": phone_number
             }
         ]
     }
@@ -93,17 +93,17 @@ def send_email_via_activetrail(person_name, mail, user_id):
 
     # Construct the message with the main ticket and up to 6 extra tickets from the user if they are non-empty
     ticket_links = [user.ticket] + [getattr(user, f"extra_ticket{i}") for i in range(1, 7) if getattr(user, f"extra_ticket{i}", None)]
-    ticket_links_text = "<br /> <br />".join([f"<a href='https://motek-kkl.co.il/media/{link}'>Ticket{event_type}</a>" for link in ticket_links])
+    ticket_links_text = "<br /> <br />".join([f"<a href='https://motek-kkl.co.il/media/{link}'>כרטיס</a>" for link in ticket_links])
 
     # print('[Ticket links ] - ', ticket_links, '\n\n', ticket_links_text)
-    message = f"""שלום {person_name},  
+    message = f"""<div dir="rtl">שלום {person_name},  
         מצורפים הכרטיסים לאירוע "מותק של יער", אנא הצג אותם בכניסה לאירוע.
 
         חשוב: הכרטיס הוא אישי ואינו ניתן להעברה, אורח שאין ברשותו כרטיס לא יורשה להיכנס לאירוע.
 
         כדי לצפות בכרטיסים יש ללחוץ על הלינקים הבאים: 
     """
-    message = message + "<br /> <br />" + ticket_links_text
+    message = message + "<br /> <br />" + ticket_links_text + "</div>"
     
     
     headers = {
