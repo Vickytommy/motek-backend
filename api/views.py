@@ -114,12 +114,12 @@ def notify_user(request):
     # email = "vickytommy785@gmail.com"
     # ticket_link = "https://example.com/ticket"
 
-    response = send_sms_via_activetrail('Victor', '9123254011', 28)
-    response2 = send_email_via_activetrail('Victor', 'vickytommy785@gmail.com', 28)
+    response = send_sms_via_activetrail('Victor', '9123254011', 34)
+    response2 = send_email_via_activetrail('Victor', 'vickytommy785@gmail.com', 34)
     # response = send_sms_via_activetrail(person_name, phone_number, ticket_link)
     # response2 = send_email_via_activetrail(person_name, email, ticket_link)
 
-    print(response)
+    print(response, '\n\n')
     print(response2)
     return JsonResponse(response)
 

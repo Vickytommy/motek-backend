@@ -25,7 +25,7 @@ def send_sms_via_activetrail(person_name, phone_number, user_id):
     ticket_links = [user.ticket] + [getattr(user, f"extra_ticket{i}") for i in range(1, 7) if getattr(user, f"extra_ticket{i}", None)]
     ticket_links_text = "\n\n".join([f"https://motek-kkl.co.il/media/{link}" for link in ticket_links])
 
-    print('[Ticket sms links ] - ', ticket_links, '\n\n', ticket_links_text)
+    # print('[Ticket sms links ] - ', ticket_links, '\n\n', ticket_links_text)
 
     message = f"""שלום {person_name},  
         מצורפים הכרטיסים לאירוע "מותק של יער", אנא הצג אותם בכניסה לאירוע.
@@ -45,8 +45,8 @@ def send_sms_via_activetrail(person_name, phone_number, user_id):
         "details": {
             "unsubscribe_text": "unsubscribe",
             "can_unsubscribe": False,
-            "name": "test1",
-            "from_name": "רישום לאירוע מותק של יער",
+            "name": "kkl",
+            "from_name": "kkl",
             "content": message,
         },
         "scheduling": {
@@ -62,7 +62,7 @@ def send_sms_via_activetrail(person_name, phone_number, user_id):
         ]
     }
 
-    print('payload - ', payload, '\n\n ', json.dumps(payload))
+    # print('payload - ', payload, '\n\n ', json.dumps(payload))
 
  # Send POST request
     try:
@@ -95,9 +95,9 @@ def send_email_via_activetrail(person_name, mail, user_id):
 
     # Construct the message with the main ticket and up to 6 extra tickets from the user if they are non-empty
     ticket_links = [user.ticket] + [getattr(user, f"extra_ticket{i}") for i in range(1, 7) if getattr(user, f"extra_ticket{i}", None)]
-    ticket_links_text = "<br /> <br />".join([f"<a href='https://motek-kkl.co.il/media/{link}'>כרטיס</a>" for link in ticket_links])
+    ticket_links_text = "<br /> <br />".join([f"<a href='https://motek-kkl.co.il/media/{link}'>Ticket</a>" for link in ticket_links])
 
-    # print('[Ticket links ] - ', ticket_links, '\n\n', ticket_links_text)
+    print('[Ticket links ] - \n\n', ticket_links_text)
     message = f"""<div dir="rtl">שלום {person_name},  
         מצורפים הכרטיסים לאירוע "מותק של יער", אנא הצג אותם בכניסה לאירוע.
 
@@ -134,7 +134,7 @@ def send_email_via_activetrail(person_name, mail, user_id):
         }
     }
     
-    print('payload - ', payload, '\n\n ', json.dumps(payload))
+    # print('payload - ', payload, '\n\n ', json.dumps(payload))
 
  # Send POST request
     try:
