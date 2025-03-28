@@ -68,8 +68,10 @@ def send_sms_via_activetrail(person_name, phone_number, user_id):
     try:
         response = requests.post(url, headers=headers, data=json.dumps(payload))
         response.raise_for_status()  # Raises an error for HTTP codes 400+
+        print('[Processed sms]')
         return response.json()
     except requests.exceptions.RequestException as e:
+        print('[Failed to process sms]')
         return {"error": str(e)}
     
 
@@ -138,7 +140,9 @@ def send_email_via_activetrail(person_name, mail, user_id):
     try:
         response = requests.post(url, headers=headers, data=json.dumps(payload))
         response.raise_for_status()  # Raises an error for HTTP codes 400+
+        print('[Processed email]')
         return response.json()
     except requests.exceptions.RequestException as e:
+        print('[Failed to process email]')
         return {"error": str(e)}
     

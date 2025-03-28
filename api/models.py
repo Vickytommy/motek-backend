@@ -148,7 +148,7 @@ class RegisteredUser(models.Model):
         
         # Reduce the entire image size by 50%
         new_size = (ticket.width // 2, ticket.height // 2)
-        ticket = ticket.resize(new_size, Image.ANTIALIAS)  # Smooth resizing
+        ticket = ticket.resize(new_size, Image.LANCZOS)  # Smooth resizing
 
         # Save image to buffer
         fname = f"ticket-{self.id_card}-{name}.png"

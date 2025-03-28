@@ -18,8 +18,6 @@ def users(request):
 
 @api_view(['POST'])
 def register(request):
-    # print('[The serializer - ] ', UserLimit.objects.first().count)
-    
     day_map = {
         1: 'יום שני 15.04.25',
         2: 'יום שלישי 16.04.25',
@@ -32,12 +30,15 @@ def register(request):
     }
 
     if request.method == "POST":
+        print('[Processing post request]')
         if RegisteredUser.objects.filter(id_card=request.POST.get("id_card")).exists():
             # ID card already registered
+            print('[Id card exists]')
             return JsonResponse({"message": "לא ניתן להירשם עם פרטים אלו. מספר הטלפון ו/או האימייל כבר קיימים במערכת"}, status=400)
         
         if RegisteredUser.objects.filter(mail=request.POST.get("mail")).exists():
             # Email already registered
+            print('[Email exists]')
             return JsonResponse({"message": "לא ניתן להירשם עם פרטים אלו. מספר הטלפון ו/או האימייל כבר קיימים במערכת"}, status=400)
         
         try:
@@ -85,9 +86,15 @@ def register(request):
 
             user_limit_entry.current_count = user_limit_current + 1
             user_limit_entry.save()
+            print('[User saved]')
 
-            send_sms_via_activetrail(firstname, mobile, user.id)
-            send_email_via_activetrail(firstname, mail, user.id)
+            try:
+                send_sms_via_activetrail(firstname, mobile, user.id)
+                send_email_via_activetrail(firstname, mail, user.id)
+                print('[sms & email sent]')
+            except:
+                print('[Error - ] ', e)
+                return JsonResponse({"message": "הרישום נכשל"}, status=400)
 
             # Registration successful
             return JsonResponse({"message": "הרישום בוצע בהצלחה"}, status=201)
@@ -96,6 +103,7 @@ def register(request):
             print('[Error - ] ', e)
             return JsonResponse({"message": "הרישום נכשל"}, status=400)
 
+    print('[Method is not POST]')
     # Invalid request
     return JsonResponse({"message": "הרישום נכשל"}, status=400)
 
