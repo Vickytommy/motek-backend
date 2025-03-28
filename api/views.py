@@ -101,13 +101,15 @@ def register(request):
 
 
 def notify_user(request):
-    person_name = "Victor"
-    phone_number = "+2349123254011"  # Example phone number
-    email = "vickytommy785@gmail.com"
-    ticket_link = "https://example.com/ticket"
+    # person_name = "Victor"
+    # phone_number = "+2349123254011"  # Example phone number
+    # email = "vickytommy785@gmail.com"
+    # ticket_link = "https://example.com/ticket"
 
-    response = send_sms_via_activetrail(person_name, phone_number, ticket_link)
-    response2 = send_email_via_activetrail(person_name, email, ticket_link)
+    response = send_sms_via_activetrail('Victor', '9123254011', 28)
+    response2 = send_email_via_activetrail('Victor', 'vickytommy785@gmail.com', 28)
+    # response = send_sms_via_activetrail(person_name, phone_number, ticket_link)
+    # response2 = send_email_via_activetrail(person_name, email, ticket_link)
 
     print(response)
     print(response2)
