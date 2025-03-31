@@ -3,6 +3,7 @@ from rest_framework import viewsets
 from .models import RegisteredUser, UserLimit
 from .serializers import RegisteredUserSerializer
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from .utils import send_email_via_activetrail, send_sms_via_activetrail
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -16,7 +17,8 @@ def users(request):
     users_data = RegisteredUserSerializer(users, many=True).data
     return JsonResponse(users_data, safe=False)
 
-@api_view(['POST'])
+
+@csrf_exempt
 def register(request):
     day_map = {
         1: 'יום שני 15.04.25',
