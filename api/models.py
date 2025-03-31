@@ -146,8 +146,8 @@ class RegisteredUser(models.Model):
         # Paste QR code onto the ticket
         ticket.paste(qrcode_img, (qr_x, qr_y))
         
-        # Reduce the entire image size by 50%
-        new_size = (ticket.width // 2, ticket.height // 2)
+        # Reduce the entire image size by 20%
+        new_size = (ticket.width // 5, ticket.height // 5)
         ticket = ticket.resize(new_size, Image.LANCZOS)  # Smooth resizing
 
         # Save image to buffer
