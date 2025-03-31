@@ -18,7 +18,6 @@ def users(request):
     return JsonResponse(users_data, safe=False)
 
 
-@csrf_exempt
 def register(request):
     day_map = {
         1: 'יום שני 15.04.25',
