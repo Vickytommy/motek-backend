@@ -48,7 +48,7 @@ def register(request):
             mail = request.POST.get("mail")
             id_card = request.POST.get("id_card")
             city = request.POST.get("city")
-            number_of_tickets = int(request.POST.get("num_tickets")) + 1
+            number_of_tickets = request.POST.get("num_tickets")
             extra_name1 = request.POST.get("ticket1", "")
             extra_name2 = request.POST.get("ticket2", "")
             extra_name3 = request.POST.get("ticket3", "")
@@ -84,7 +84,7 @@ def register(request):
                 time=time
             )
 
-            user_limit_entry.current_count = user_limit_current + int(request.POST.get("num_tickets")) + 1
+            user_limit_entry.current_count = user_limit_current + 1
             user_limit_entry.save()
             print('[User saved]')
 
