@@ -16,6 +16,12 @@ def users(request):
     users_data = RegisteredUserSerializer(users, many=True).data
     return JsonResponse(users_data, safe=False)
 
+@api_view(['GET'])
+def user_limit(request):
+    user_limits = UserLimit.objects.all()
+    user_limits_data = [{"ticket_day": ul.ticket_day, "ticket_time": ul.ticket_time, "current_count": ul.current_count, "cycle_count": ul.cycle_count} for ul in user_limits]
+    return JsonResponse(user_limits_data, safe=False)
+
 @api_view(['POST'])
 def register(request):
     day_map = {
