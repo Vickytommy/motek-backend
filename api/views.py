@@ -62,7 +62,7 @@ def register(request):
             user_limit_current = user_limit_entry.current_count
             user_limit = user_limit_entry.cycle_count
 
-            if user_limit_current >= user_limit:
+            if user_limit_current + 1 >= user_limit:
                 # User limit reached
                 return JsonResponse({"message": "ההרשמה סגורה"}, status=400)
 
